@@ -3,7 +3,7 @@ Source code for paper "Generative Flow Network for Listwise Recommendation"
 
 ## Citing
 
-'''
+```
 @inproceedings{liu2023exploration,
   author = {Liu, Shuchang and Cai, Qingpeng and Sun, Bowen and Wang, Yuhao and Jiang, Ji and Zheng, Dong and Jiang, Peng and Gai, Kun and Zhao, Xiangyu and Zhang, Yongfeng},
   title = {Exploration and Regularization of the Latent Action Space in Recommendation},
@@ -18,4 +18,4 @@ Source code for paper "Generative Flow Network for Listwise Recommendation"
   location = {Austin, TX, USA},
   series = {WWW '23}
 }
-'''
+```
