@@ -4,7 +4,7 @@ Source code for paper "Generative Flow Network for Listwise Recommendation"
 ## Citing
 
 ```
-@inproceedings{liu2023exploration,
+@inproceedings{liu2023generative,
   author = {Liu, Shuchang and Cai, Qingpeng and He, Zhankui and Sun, Bowen and McAuley, Julian and Zheng, Dong and Jiang, Peng and Gai, Kun},
   title = {Generative Flow Network for Listwise Recommendation},
   year = {2023},
