@@ -85,7 +85,7 @@ Resulting model and log will be saved in *output/ml1m/env/*
 
 > KuaiRand Multi-Behavior Simulator.ipynb
 
-# 3. Train RL Agent
+# 3. Train Online/Offline Agents
 
 All related training scripts in *scripts/*
 
