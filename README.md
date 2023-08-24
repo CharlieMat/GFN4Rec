@@ -105,7 +105,7 @@ train_<model_name>_<dataset>.sh
 ```
 
 For example:
-* Detailed Balance loss:
+
 ```
 bash train_gfn_db_kuairand.sh
 bash train_gfn_tb_kuairand.sh
