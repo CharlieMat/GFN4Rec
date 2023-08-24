@@ -1,0 +1,5 @@
+.DS_Store
+.checkpoint
+code/output/
+code/dataset/
+.pyc
