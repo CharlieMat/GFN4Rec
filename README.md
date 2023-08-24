@@ -2,6 +2,26 @@
 
 GFlowNet for listwise recommendation.
 
+Citation:
+```
+@inproceedings{10.1145/3580305.3599364,
+author = {Liu, Shuchang and Cai, Qingpeng and He, Zhankui and Sun, Bowen and McAuley, Julian and Zheng, Dong and Jiang, Peng and Gai, Kun},
+title = {Generative Flow Network for Listwise Recommendation},
+year = {2023},
+isbn = {9798400701030},
+publisher = {Association for Computing Machinery},
+address = {New York, NY, USA},
+url = {https://doi.org/10.1145/3580305.3599364},
+doi = {10.1145/3580305.3599364},
+booktitle = {Proceedings of the 29th ACM SIGKDD Conference on Knowledge Discovery and Data Mining},
+pages = {1524–1534},
+numpages = {11},
+keywords = {recommender systems, online learning, generative model},
+location = {Long Beach, CA, USA},
+series = {KDD '23}
+}
+```
+
 ## 0.Setup
 
 ```
@@ -15,20 +35,6 @@ python -m ipykernel install --user --name gfn4rec --display-name "GFN4Rec"
 ## 1. User Response Model
 
 #### 1.1 [KuaiRand-1K](https://kuairand.com/)
-
-```
-@inproceedings{gao2022kuairand,
-  title = {KuaiRand: An Unbiased Sequential Recommendation Dataset with Randomly Exposed Videos},
-  author = {Chongming Gao and Shijun Li and Yuan Zhang and Jiawei Chen and Biao Li and Wenqiang Lei and Peng Jiang and Xiangnan He},
-  url = {https://doi.org/10.1145/3511808.3557624},
-  doi = {10.1145/3511808.3557624},
-  booktitle = {Proceedings of the 31st ACM International Conference on Information and Knowledge Management},
-  series = {CIKM '22},
-  location = {Atlanta, GA, USA},
-  numpages = {5},
-  year = {2022}
-}
-```
 
 First check KuaiRandPreprocess.ipynb for preprocessing steps and KuaiRandDataset.ipynb for dataset details.
 
@@ -45,6 +51,8 @@ Then run script for user response model pretraining:
 ```
 bash train_multi_behavior_user_response_kuairand.sh
 ```
+
+Resulting model and log will be saved in 'output/kuairand/env/'
 
 Note: multi-behavior user response models consists the state_encoder that is assumed to be the ground truth user state transition model.
 
@@ -70,29 +78,7 @@ Then run script for user response model pretraining:
 bash train_multi_behavior_user_response_ml1m.sh
 ```
 
-#### 1.3 [ContentWise](https://github.com/ContentWise/contentwise-impressions)
-
-```
-@inproceedings{contentwise-impressions,
- author = {P\'{e}rez Maurera, Fernando B. and Ferrari Dacrema, Maurizio and Saule, Lorenzo and Scriminaci, Mario and Cremonesi, Paolo},
- title = {ContentWise Impressions: An Industrial Dataset with Impressions Included},
- year = {2020},
- isbn = {9781450368599},
- publisher = {Association for Computing Machinery},
- address = {New York, NY, USA},
- url = {https://doi.org/10.1145/3340531.3412774},
- doi = {10.1145/3340531.3412774},
- booktitle = {Proceedings of the 29th ACM International Conference on Information &amp; Knowledge Management},
- pages = {3093–3100},
- numpages = {8},
- keywords = {dataset, implicit feedback, impressions, collaborative filtering, open source},
- location = {Virtual Event, Ireland},
- series = {CIKM '20}
-}
-```
-
-
-
+Resulting model and log will be saved in *output/ml1m/env/*
 
 
 # 2. Simulated Environment Example
@@ -101,53 +87,42 @@ bash train_multi_behavior_user_response_ml1m.sh
 
 # 3. Train RL Agent
 
-### 3.1 GFN
+All related training scripts in *scripts/*
 
-#### Detailed Balance loss:
+### Model Implimentation
 
-```
-bash train_gfn_db_XXX.sh
-```
-Note XXX represents the corresponding dataset name (e.g. movielens, kuairand, contentwise)
+All models are implemented in *model/*
 
-#### Trajectory Balance loss:
+* model/agent: the training agents that coordinate the learning of different components
+* model/buffer: the experience replay buffer for online training
+* model/policy: the recommendation model
+* model/simulator: the user response model integrated in the simulated environment
 
-```
-bash train_gfn_tb_XXX.sh
-```
-
-### 3.2 Learning-to-Rank Baselines:
-
-Pointwise ranker:
+All model training scripts are named as:
 
 ```
-bash train_ptranker_XXX.sh
+train_<model_name>_<dataset>.sh
 ```
 
-### 3.3 List-wise Ranking Baselines:
+For example:
+* Detailed Balance loss:
+```
+bash train_gfn_db_kuairand.sh
+bash train_gfn_tb_kuairand.sh
+```
 
-#### PRM
-
-
-#### GRN
-
-
-### 3.4 Generative Rec Baselines:
-
-#### ListCVAE
-
-
-#### PivotCVAE
-
-
-### 3.5 RL Baselines:
-
-#### TD3
-
+Output logs and model checkpoints will be saved in *output/<dataset>/agent/*
 
 # 4. Result Observation
 
-Training curves check:
+For training curves check:
 
 > TrainingObservation.ipynb
 
+For offline training observation, check:
+
+> OfflineObservation.ipynb
+
+For GFN4Rec analysis, check:
+
+> GFN Observation.ipynb
