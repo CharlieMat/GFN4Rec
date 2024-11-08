@@ -104,6 +104,7 @@ class KRUserEnvironment_FiniteImmediate():
         
         self.immediate_response_model.to(args.device)
         self.immediate_response_model.device = args.device
+        self.env_response_history = {}
         
     def get_candidate_info(self, observation):
         '''
@@ -216,6 +217,9 @@ class KRUserEnvironment_FiniteImmediate():
         - user_feedback
         - updated_observation (next observation of the same user)
         '''
+        # fix error name 'action' is not defined
+        # (B, slate_size)
+        action = step_dict['action']
         
         # user interaction
         with torch.no_grad():
@@ -252,8 +256,18 @@ class KRUserEnvironment_FiniteImmediate():
                 print(done_mask)
                 print("User leave not synchronized")
                 raise NotImplemented
+
+        #
+           # Append the report to env_response_history
+        report = self.get_env_report()
+        for key, value in report.items():
+            if key not in self.env_response_history:
+                self.env_response_history[key] = []
+            self.env_response_history[key].append(value)
+
         user_feedback = {'immediate_response': response, 
                          'done': done_mask}
+                         
         return deepcopy(self.current_observation), user_feedback, update_info['updated_observation']
     
     def get_response(self, step_dict):
@@ -361,6 +375,10 @@ class KRUserEnvironment_FiniteImmediate():
             k = f'history_{response}'
             new_history[k] = torch.cat((old_history[k], slate_response[:,:,i]), dim = 1)[:,-max_H:]
         self.current_observation['user_history'] = new_history
+
+
+
+
         return {'slate': rec_list, 'updated_observation': deepcopy(self.current_observation)}
 
     def get_leave_signal(self, response):
@@ -405,8 +423,13 @@ class KRUserEnvironment_FiniteImmediate():
         return iter(DataLoader(self.reader, batch_size = B, shuffle = True, 
                                pin_memory = True, num_workers = 8))
         
-    def get_env_report(self, window = 50):
-        return {}
-        
-        
-        
+    def get_env_report(self, window=50):
+        report = {}
+        for key in self.response_types:
+            history_key = f'history_{key}'
+            if history_key in self.current_observation['user_history']:
+                report[key] = torch.mean(self.current_observation['user_history'][history_key][:, -window:]).item()
+            else:
+                report[key] = 0
+
+        return report

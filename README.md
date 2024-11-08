@@ -29,6 +29,7 @@ conda create -n gfn4rec python=3.8
 conda activate gfn4rec
 conda install pytorch torchvision -c pytorch
 conda install pandas matplotlib scikit-learn tqdm ipykernel
+pip install -r requirements.txt
 python -m ipykernel install --user --name gfn4rec --display-name "GFN4Rec"
 ```
 
